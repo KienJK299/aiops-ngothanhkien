@@ -6,10 +6,8 @@ Nếu tích hợp hai field này vào fingerprint, hệ thống sẽ sinh ra vô
 # Sự khác biệt giữa “duplicate” và “correlated” alert là gì? Ví dụ cụ thể từ lab dataset.
 
 ## Duplicate là 1 sự cố lặp đi lặp lại trong 1 khoảng thời gian vd:
-
-```json
-{"id": "a-0001", "ts": "2026-06-12T09:42:01Z", "service": "payment-svc", "metric": "db_connection_pool_used_ratio", "severity": "warn",  "value": 0.85, "threshold": 0.80, "labels": {"env": "prod", "region": "ap-southeast-1"}}
 {"id": "a-0002", "ts": "2026-06-12T09:42:18Z", "service": "payment-svc", "metric": "db_connection_pool_used_ratio", "severity": "crit",  "value": 0.99, "threshold": 0.95, "labels": {"env": "prod", "region": "ap-southeast-1"}}
+{"id": "a-0011", "ts": "2026-06-12T09:44:02Z", "service": "payment-svc", "metric": "db_connection_pool_used_ratio", "severity": "crit",  "value": 1.00, "threshold": 0.95, "labels": {"env": "prod", "region": "ap-southeast-1"}}
 ```
 
 --> cùng là 1 payment-svc 
@@ -19,6 +17,7 @@ Nếu tích hợp hai field này vào fingerprint, hệ thống sẽ sinh ra vô
 ```json
 {"id": "a-0004", "ts": "2026-06-12T09:42:30Z", "service": "payment-svc", "metric": "error_rate",                    "severity": "warn",  "value": 0.04, "threshold": 0.02, "labels": {"env": "prod", "region": "ap-southeast-1"}}
 {"id": "a-0005", "ts": "2026-06-12T09:42:45Z", "service": "checkout-svc","metric": "latency_p99_ms",                "severity": "warn",  "value": 2100, "threshold": 1500, "labels": {"env": "prod", "region": "ap-southeast-1"}}
+
 ```
 
 --> payment-svc kéo theo checkout-svc
