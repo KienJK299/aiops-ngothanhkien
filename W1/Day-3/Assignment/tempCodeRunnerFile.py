@@ -1,0 +1,1 @@
+# 3x t3.xlarge nodes for ingestion/query

@@ -6,6 +6,7 @@ Nếu tích hợp hai field này vào fingerprint, hệ thống sẽ sinh ra vô
 # Sự khác biệt giữa “duplicate” và “correlated” alert là gì? Ví dụ cụ thể từ lab dataset.
 
 ## Duplicate là 1 sự cố lặp đi lặp lại trong 1 khoảng thời gian vd:
+```json
 {"id": "a-0002", "ts": "2026-06-12T09:42:18Z", "service": "payment-svc", "metric": "db_connection_pool_used_ratio", "severity": "crit",  "value": 0.99, "threshold": 0.95, "labels": {"env": "prod", "region": "ap-southeast-1"}}
 {"id": "a-0011", "ts": "2026-06-12T09:44:02Z", "service": "payment-svc", "metric": "db_connection_pool_used_ratio", "severity": "crit",  "value": 1.00, "threshold": 0.95, "labels": {"env": "prod", "region": "ap-southeast-1"}}
 ```
