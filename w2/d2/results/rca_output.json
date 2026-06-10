@@ -1,0 +1,53 @@
+{
+  "clusters_analyzed": 2,
+  "results": [
+    {
+      "cluster_id": "c-000-000",
+      "graph_top3": [
+        [
+          "payment-svc",
+          1.0
+        ],
+        [
+          "search-svc",
+          0.8500000000000001
+        ],
+        [
+          "cart-svc",
+          0.8410518290960176
+        ]
+      ],
+      "root_cause": "payment-svc",
+      "class": "connection_pool_exhaustion",
+      "confidence": 1.0,
+      "actions": "Rollback to v3.1. Scale pool 50 → 100 cushion. Add pool monitor alert > 80%.",
+      "reasoning": "Triggered by payment-svc based on graph traversal and matched with INC-2025-11-08",
+      "similar_incidents": [
+        "INC-2025-11-08",
+        "INC-2026-03-20",
+        "INC-2025-08-17"
+      ],
+      "method": "graph-kNN-retrieval"
+    },
+    {
+      "cluster_id": "c-000-001",
+      "graph_top3": [
+        [
+          "recommender-svc",
+          1.0
+        ]
+      ],
+      "root_cause": "recommender-svc",
+      "class": "memory_leak",
+      "confidence": 1.0,
+      "actions": "Patch leak; rollback v3.0 trong khi chờ. Add gc.collect() trong handler.",
+      "reasoning": "Triggered by recommender-svc based on graph traversal and matched with INC-2025-08-02",
+      "similar_incidents": [
+        "INC-2025-08-02",
+        "INC-2025-10-28",
+        "INC-2026-03-07"
+      ],
+      "method": "graph-kNN-retrieval"
+    }
+  ]
+}
