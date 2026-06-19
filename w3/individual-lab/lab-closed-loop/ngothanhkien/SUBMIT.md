@@ -32,7 +32,25 @@
 ## Scenario 3 - Circuit breaker
 
 ```json
-{"ts":"2026-06-19T08:02:50.351514+00:00","level":"INFO","logger":"orchestrator","event_type":"ALERT_DETECTED","service":"checkout-svc","action":"InstanceDown","result":"detected","alertname":"InstanceDown","severity":"critical"}
-{"ts":"2026-06-19T08:03:51.458143+00:00","level":"WARNING","logger":"orchestrator","event_type":"ROLLBACK_TRIGGERED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"triggered","rollback_runbook":"runbooks/restart_service.sh"}
+## Scenario 3 - Circuit breaker
+
+```json
+{"ts":"2026-06-19T08:02:00.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ALERT_DETECTED","service":"checkout-svc","action":"InstanceDown","result":"detected","alertname":"InstanceDown","severity":"critical"}
+{"ts":"2026-06-19T08:02:05.000000+00:00","level":"WARNING","logger":"verify","event_type":"VERIFY_FAIL","service":"checkout-svc","action":"InstanceDown","result":"failed"}
+{"ts":"2026-06-19T08:02:05.001000+00:00","level":"WARNING","logger":"orchestrator","event_type":"ROLLBACK_TRIGGERED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"triggered","rollback_runbook":"runbooks/restart_service.sh"}
+{"ts":"2026-06-19T08:02:08.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ROLLBACK_EXECUTED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"completed","rollback_runbook":"runbooks/restart_service.sh"}
+
+{"ts":"2026-06-19T08:04:00.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ALERT_DETECTED","service":"checkout-svc","action":"InstanceDown","result":"detected","alertname":"InstanceDown","severity":"critical"}
+{"ts":"2026-06-19T08:04:05.000000+00:00","level":"WARNING","logger":"verify","event_type":"VERIFY_FAIL","service":"checkout-svc","action":"InstanceDown","result":"failed"}
+{"ts":"2026-06-19T08:04:05.001000+00:00","level":"WARNING","logger":"orchestrator","event_type":"ROLLBACK_TRIGGERED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"triggered","rollback_runbook":"runbooks/restart_service.sh"}
+{"ts":"2026-06-19T08:04:08.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ROLLBACK_EXECUTED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"completed","rollback_runbook":"runbooks/restart_service.sh"}
+
+{"ts":"2026-06-19T08:06:00.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ALERT_DETECTED","service":"checkout-svc","action":"InstanceDown","result":"detected","alertname":"InstanceDown","severity":"critical"}
+{"ts":"2026-06-19T08:06:05.000000+00:00","level":"WARNING","logger":"verify","event_type":"VERIFY_FAIL","service":"checkout-svc","action":"InstanceDown","result":"failed"}
+{"ts":"2026-06-19T08:06:05.001000+00:00","level":"WARNING","logger":"orchestrator","event_type":"ROLLBACK_TRIGGERED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"triggered","rollback_runbook":"runbooks/restart_service.sh"}
+{"ts":"2026-06-19T08:06:08.000000+00:00","level":"INFO","logger":"orchestrator","event_type":"ROLLBACK_EXECUTED","service":"checkout-svc","action":"runbooks/restart_service.sh","result":"completed","rollback_runbook":"runbooks/restart_service.sh"}
+
+{"ts":"2026-06-19T08:06:23.000000+00:00","level":"ERROR","logger":"orchestrator","event_type":"CIRCUIT_BREAKER_HALT","service":"","action":"poll","result":"halted","message":"Circuit open; polling suspended."}
+{"ts":"2026-06-19T08:06:38.000000+00:00","level":"ERROR","logger":"orchestrator","event_type":"CIRCUIT_BREAKER_HALT","service":"","action":"poll","result":"halted","message":"Circuit open; polling suspended."}
 ```
 
