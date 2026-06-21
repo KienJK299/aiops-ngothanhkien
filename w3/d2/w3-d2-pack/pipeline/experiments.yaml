@@ -1,0 +1,239 @@
+# 10 chaos experiments — filled #2-9, keep #1 + #10 as reference
+# Each entry needs ALL 5 fields per §5: name, hypothesis, blast_radius, rollback, measurement, ground_truth
+
+experiments:
+
+  - id: 1
+    name: payment_latency
+    fault_type: latency
+    target: payment-svc
+    hypothesis: |
+      Steady-state: probe pass-rate >= 99%, p99 latency < 500ms.
+      Injecting 500ms ± 100ms delay on payment-svc network egress for 60s,
+      pipeline detector fires latency anomaly within 30s and RCA picks payment-svc.
+      probe pass-rate may drop to 70-80% during inject (acceptable).
+    blast_radius:
+      target: 1 instance of payment-svc
+      duration_seconds: 60
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: probe_pass_rate < 50% for 20s
+      method: tc qdisc del dev eth0 root
+    measurement:
+      metrics: [probe_pass_rate, p99_latency, detector_alerts, rca_root_service]
+      capture_window_seconds: 300
+    ground_truth:
+      expected_root_service: payment-svc
+      expected_fault_class: latency
+
+  - id: 2
+    name: payment_packet_loss
+    fault_type: network_loss
+    target: payment-svc
+    hypothesis: |
+      Steady-state: probe pass-rate >= 99%, error rate < 1%.
+      Injecting 30% packet loss on payment-svc ingress network interface for 60s.
+      Expect the detector to trigger an error_rate anomaly within 15s. RCA pipeline 
+      must correctly flag payment-svc as the root cause due to dropped TCP packets.
+    blast_radius:
+      target: payment-svc network interface
+      duration_seconds: 60
+      traffic_percent: 30
+    rollback:
+      automatic: true
+      trigger_when: probe_pass_rate < 60% for 15s
+      method: tc qdisc del dev eth0 root
+    measurement:
+      metrics: [probe_pass_rate, inbound_error_rate, packet_drop_count, rca_root_service]
+      capture_window_seconds: 300
+    ground_truth:
+      expected_root_service: payment-svc
+      expected_fault_class: network_loss
+
+  - id: 3
+    name: inventory_pod_kill
+    fault_type: availability
+    target: inventory-svc
+    hypothesis: |
+      Steady-state: inventory-svc replica count >= 2, availability = 100%.
+      Injecting a continuous pod kill container eviction every 60s for a duration of 180s.
+      Expect availability detector to trigger service degradation alert. RCA should pinpoint 
+      inventory-svc as root cause due to instant container terminations.
+    blast_radius:
+      target: inventory-svc container replicas
+      duration_seconds: 180
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: active_replicas < 1
+      method: docker start inventory-svc
+    measurement:
+      metrics: [probe_pass_rate, container_restart_count, service_uptime, rca_root_service]
+      capture_window_seconds: 400
+    ground_truth:
+      expected_root_service: inventory-svc
+      expected_fault_class: availability
+
+  - id: 4
+    name: gateway_cpu_stress
+    fault_type: cpu_saturation
+    target: api-gateway
+    hypothesis: |
+      Steady-state: api-gateway CPU utilization < 40%, downstream p99 latency < 200ms.
+      Stressing api-gateway CPU up to 90% utilization for 120s. Expect a cascade latency anomaly 
+      across all downstream microservices. RCA pipeline should identify api-gateway as the choke point.
+    blast_radius:
+      target: api-gateway core compute resource
+      duration_seconds: 120
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: gateway_cpu_utilization > 98% for 30s
+      method: pkill -f stress-ng
+    measurement:
+      metrics: [probe_pass_rate, gateway_cpu_utilization, downstream_latency, rca_root_service]
+      capture_window_seconds: 450
+    ground_truth:
+      expected_root_service: api-gateway
+      expected_fault_class: cpu_saturation
+
+  - id: 5
+    name: payment_db_mem_leak
+    fault_type: memory
+    target: payment-db
+    hypothesis: |
+      Steady-state: payment-db memory usage < 60%, connection pool utilization < 50%.
+      Filling memory up to 95% limit on payment-db for 90s. Expect connection pool exhaustion anomalies 
+      and read/write transaction timeouts. RCA pipeline must pinpoint payment-db.
+    blast_radius:
+      target: payment-db RAM allocation
+      duration_seconds: 90
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: db_connection_timeouts > 50
+      method: docker exec payment-db sync; echo 3 > /proc/sys/vm/drop_caches
+    measurement:
+      metrics: [probe_pass_rate, db_memory_utilization, pool_exhaustion_rate, rca_root_service]
+      capture_window_seconds: 360
+    ground_truth:
+      expected_root_service: payment-db
+      expected_fault_class: memory_saturation
+
+  - id: 6
+    name: auth_clock_skew
+    fault_type: time_skew
+    target: auth-svc
+    hypothesis: |
+      Steady-state: auth-svc system time synchronized, JWT/cert token validation success > 99%.
+      Injecting a +60s clock drift/skew on auth-svc container system time for 60s. Expect sudden JWT 
+      token expiration/validation failures. RCA pipeline should flag auth-svc as root cause.
+    blast_radius:
+      target: auth-svc system clock
+      duration_seconds: 60
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: token_validation_failure_rate > 80%
+      method: chronyc -a makestep
+    measurement:
+      metrics: [probe_pass_rate, token_validation_failure_rate, clock_offset_seconds, rca_root_service]
+      capture_window_seconds: 300
+    ground_truth:
+      expected_root_service: auth-svc
+      expected_fault_class: time_skew
+
+  - id: 7
+    name: log_collector_disk_fill
+    fault_type: disk_fill
+    target: log-collector
+    hypothesis: |
+      Steady-state: log-collector disk usage < 70%, log ingestion lag < 2s.
+      Filling log-collector root partition up to 95% capacity for 150s. Expect a meta-monitoring 
+      ingestion lag anomaly. System data planes should remain safe due to log backup buffers.
+    blast_radius:
+      target: log-collector storage volume
+      duration_seconds: 150
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: disk_free_bytes < 100MB
+      method: rm -rf /tmp/chaos_disk_fill.img
+    measurement:
+      metrics: [probe_pass_rate, disk_utilization_percent, log_ingestion_lag, rca_root_service]
+      capture_window_seconds: 400
+    ground_truth:
+      expected_root_service: log-collector
+      expected_fault_class: disk_fill
+
+  - id: 8
+    name: edge_network_partition
+    fault_type: network_partition
+    target: frontend
+    hypothesis: |
+      Steady-state: network connectivity between frontend and api-gateway is 100%.
+      Injecting a full network partition between frontend and api-gateway for 30s. Expect an immediate 
+      all-downstream timeout blast. RCA pipeline must recognize edge isolation and pick edge components.
+    blast_radius:
+      target: frontend bidirectional network routes
+      duration_seconds: 30
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: probe_pass_rate == 0% for 15s
+      method: iptables -F
+    measurement:
+      metrics: [probe_pass_rate, frontend_dropped_packets, downstream_unreachable_alerts, rca_root_service]
+      capture_window_seconds: 300
+    ground_truth:
+      expected_root_service: frontend
+      expected_fault_class: network_partition
+
+  - id: 9
+    name: dns_resolver_latency
+    fault_type: dns_latency
+    target: dns-resolver
+    hypothesis: |
+      Steady-state: DNS query response time < 10ms, intermittent service errors = 0.
+      Injecting a +2s delay on all external/internal DNS lookups performed by dns-resolver for 90s. 
+      Expect intermittent client connection errors. RCA mapping will be topology-dependent.
+    blast_radius:
+      target: dns-resolver UDP/TCP outbound requests
+      duration_seconds: 90
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: dns_query_timeout_count > 20
+      method: iptables -t nat -F
+    measurement:
+      metrics: [probe_pass_rate, dns_resolution_time, downstream_connection_errors, rca_root_service]
+      capture_window_seconds: 300
+    ground_truth:
+      expected_root_service: dns-resolver
+      expected_fault_class: dns_latency
+
+  - id: 10
+    name: checkout_retry_storm
+    fault_type: http_error
+    target: checkout-svc
+    hypothesis: |
+      Steady-state: probe pass-rate >= 99%.
+      Injecting 20% HTTP 500 on checkout-svc responses for 90s, client retries
+      amplify load on upstream payment-svc + inventory-svc. Pipeline must NOT
+      pick checkout-svc as root (it's the symptom carrier, not cause). RCA
+      should pick payment-svc OR inventory-svc (whichever shows queue depth).
+    blast_radius:
+      target: 100% of checkout-svc requests
+      duration_seconds: 90
+      traffic_percent: 100
+    rollback:
+      automatic: true
+      trigger_when: probe_pass_rate < 30% for 30s
+      method: toxiproxy-cli toxic remove
+    measurement:
+      metrics: [probe_pass_rate, retry_count, upstream_queue_depth, rca_root_service]
+      capture_window_seconds: 600
+    ground_truth:
+      expected_root_service: NOT checkout-svc  # negative test
+      expected_fault_class: cascade_retry

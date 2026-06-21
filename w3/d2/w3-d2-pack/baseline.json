@@ -1,0 +1,31 @@
+{
+  "captured_at": "2026-06-16T10:38:48.476338+00:00",
+  "duration_seconds": 300,
+  "metrics": {
+    "rate(http_requests_total[1m])": {
+      "mean": 0.10381195902141345,
+      "p99": 0.14914298537009235,
+      "samples": 30
+    },
+    "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[1m]))": {
+      "mean": 0.09992270028597773,
+      "p99": 0.14071639866760183,
+      "samples": 30
+    },
+    "rate(http_requests_total{status=~'5..'}[1m])": {
+      "mean": 0.005063294936057007,
+      "p99": 0.009367025846678994,
+      "samples": 30
+    },
+    "container_memory_usage_bytes": {
+      "mean": 36.88695105503137,
+      "p99": 46.13491675094877,
+      "samples": 30
+    },
+    "rate(container_cpu_usage_seconds_total[1m])": {
+      "mean": 33.85408192074734,
+      "p99": 49.43191419058244,
+      "samples": 30
+    }
+  }
+}

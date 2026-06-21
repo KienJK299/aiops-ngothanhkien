@@ -1,0 +1,222 @@
+[
+  {
+    "id": 1,
+    "name": "payment_latency",
+    "detected": true,
+    "mttd": 19,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1782040112,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040131,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc"
+      },
+      "mttd_seconds": 19,
+      "detected": true
+    }
+  },
+  {
+    "id": 2,
+    "name": "payment_packet_loss",
+    "detected": true,
+    "mttd": 5,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1782040121,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040126,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc"
+      },
+      "mttd_seconds": 5,
+      "detected": true
+    }
+  },
+  {
+    "id": 3,
+    "name": "inventory_pod_kill",
+    "detected": true,
+    "mttd": 24,
+    "rca_service": "inventory-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1782040130,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040154,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "inventory-svc"
+      },
+      "mttd_seconds": 24,
+      "detected": true
+    }
+  },
+  {
+    "id": 4,
+    "name": "gateway_cpu_stress",
+    "detected": true,
+    "mttd": 9,
+    "rca_service": "api-gateway",
+    "rca_correct": true,
+    "observed_at_ts": 1782040139,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040148,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "api-gateway"
+      },
+      "mttd_seconds": 9,
+      "detected": true
+    }
+  },
+  {
+    "id": 5,
+    "name": "payment_db_mem_leak",
+    "detected": true,
+    "mttd": 21,
+    "rca_service": "payment-db",
+    "rca_correct": true,
+    "observed_at_ts": 1782040148,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040169,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-db"
+      },
+      "mttd_seconds": 21,
+      "detected": true
+    }
+  },
+  {
+    "id": 6,
+    "name": "auth_clock_skew",
+    "detected": true,
+    "mttd": 18,
+    "rca_service": "auth-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1782040157,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040175,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "auth-svc"
+      },
+      "mttd_seconds": 18,
+      "detected": true
+    }
+  },
+  {
+    "id": 7,
+    "name": "log_collector_disk_fill",
+    "detected": true,
+    "mttd": 11,
+    "rca_service": "log-collector",
+    "rca_correct": true,
+    "observed_at_ts": 1782040166,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040177,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "log-collector"
+      },
+      "mttd_seconds": 11,
+      "detected": true
+    }
+  },
+  {
+    "id": 8,
+    "name": "edge_network_partition",
+    "detected": true,
+    "mttd": 24,
+    "rca_service": "frontend",
+    "rca_correct": true,
+    "observed_at_ts": 1782040175,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040199,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "frontend"
+      },
+      "mttd_seconds": 24,
+      "detected": true
+    }
+  },
+  {
+    "id": 9,
+    "name": "dns_resolver_latency",
+    "detected": true,
+    "mttd": 7,
+    "rca_service": "dns-resolver",
+    "rca_correct": true,
+    "observed_at_ts": 1782040185,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040192,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "dns-resolver"
+      },
+      "mttd_seconds": 7,
+      "detected": true
+    }
+  },
+  {
+    "id": 10,
+    "name": "checkout_retry_storm",
+    "detected": true,
+    "mttd": 6,
+    "rca_service": "payment-svc",
+    "rca_correct": true,
+    "observed_at_ts": 1782040194,
+    "raw": {
+      "alerts": [
+        {
+          "fire_ts": 1782040200,
+          "alert_name": "AnomalyDetected"
+        }
+      ],
+      "rca": {
+        "root_service": "payment-svc"
+      },
+      "mttd_seconds": 6,
+      "detected": true
+    }
+  }
+]
