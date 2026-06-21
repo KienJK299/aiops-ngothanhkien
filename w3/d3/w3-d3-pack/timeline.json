@@ -1,0 +1,42 @@
+[
+  {
+    "ts": "2026-06-21T19:00:00Z",
+    "source": "docker",
+    "event": "start cloudflare_regex_2019-api-1"
+  },
+  {
+    "ts": "2026-06-21T19:05:00Z",
+    "source": "pipeline",
+    "event": "pipeline-alert=WAF_Rule_Active svc=cloudflare_regex_2019-api"
+  },
+  {
+    "ts": "2026-06-21T19:06:30Z",
+    "source": "prom",
+    "event": "alert=ContainerCPUExhausted state=firing"
+  },
+  {
+    "ts": "2026-06-21T19:08:00Z",
+    "source": "prom",
+    "event": "alert=HTTP_Gateway_Timeout state=firing"
+  },
+  {
+    "ts": "2026-06-21T19:09:15Z",
+    "source": "pipeline",
+    "event": "pipeline-alert=Latency_Anomaly svc=payment-svc"
+  },
+  {
+    "ts": "2026-06-21T19:10:45Z",
+    "source": "prom",
+    "event": "alert=Http_Requests_Slow state=firing"
+  },
+  {
+    "ts": "2026-06-21T19:12:00Z",
+    "source": "docker",
+    "event": "restart cloudflare_regex_2019-api-1"
+  },
+  {
+    "ts": "2026-06-21T19:12:30Z",
+    "source": "prom",
+    "event": "alert=ContainerCPUExhausted state=resolved"
+  }
+]
